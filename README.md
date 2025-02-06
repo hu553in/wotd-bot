@@ -1,23 +1,19 @@
 # Word of the day (wotd) bot
 
-Node.js Telegram Word of the day bot.
+A simple Telegram bot that sends a daily word from your list at a scheduled time.
+The bot supports group and solo chats using only commands.
+It stores each chat’s word list, daily-send settings, and history in an SQLite database.
+The bot also validates all input to ensure reliability.
 
 ## Features
 
-* Automatically registers a chat (1-on-1 or group) when accessed.
-* Allows adding a word with the command `/add <слово>` or via the "Добавить
-  слово" button.
-* Displays the list of words with inline delete buttons via `/list` or the
-  "Список слов" button.
-* Sends a random word from the list every day without repeating words until
-  all have been used (history resets).
-* Allows changing the scheduled sending time (default is 09:00) and timezone
-  (default is UTC+3) via `/time` or the "Время" button.
-* There is `/extra` command or "Другое слово" button that returns a random word
-  from the full list without recording it in history.
-* A main menu with inline buttons is provided for easy access to all commands.
-
-Data (chats, words, history, scheduled time) is stored in an SQLite database,
-with data isolated by `chat_id`.
-
-Note: All time values are in 24‑hour format.
+* Add words to your personal list with /add <word>.
+* Remove a word by exact match with /remove <word>.
+* View your complete word list using /words.
+* Retrieve a random word (and add it to history) using /random.
+  Once all words have been used, the history resets automatically.
+* View or update the scheduled daily-send time with /time [HH:MM±offset].
+  For example, /time shows the current settings, while /time 21:00+3
+  sets the send time to 21:00 with timezone UTC+03:00.
+* A cron job checks every minute and sends the "Word of the Day"
+  at the scheduled time (adjusted to each chat’s timezone).
