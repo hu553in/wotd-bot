@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure SSH key
+        uses: shimataro/ssh-key-action@v2.5.1
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: "just-a-placeholder"
+
+      - name: Configure known hosts
+        run: ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: make deploy
+        env:
+          REMOTE_SSH_USER: ${{ secrets.SSH_USER }}
+          REMOTE_SSH_IP: ${{ secrets.SSH_IP }}
+          REMOTE_SSH_PORT: ${{ secrets.SSH_PORT }}
+
+      - name: pm2
+        run: make pm2
+        env:
+          REMOTE_SSH_USER: ${{ secrets.SSH_USER }}
+          REMOTE_SSH_IP: ${{ secrets.SSH_IP }}
+          REMOTE_SSH_PORT: ${{ secrets.SSH_PORT }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}

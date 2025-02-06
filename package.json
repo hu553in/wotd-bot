@@ -1,0 +1,15 @@
+{
+    "name": "wotd-bot",
+    "version": "1.0.0",
+    "description": "Node.js Telegram Word of the day bot.",
+    "main": "bot.js",
+    "scripts": {
+        "start": "node bot.js"
+    },
+    "author": "hu553in",
+    "dependencies": {
+        "node-telegram-bot-api": "^0.66.0",
+        "sqlite3": "^5.1.7",
+        "node-cron": "^3.0.3"
+    }
+}
