@@ -17,7 +17,7 @@ The bot also validates all input to ensure reliability.
   sets the send time to 21:00 with timezone UTC+03:00.
   Default time is 09:00 with timezone UTC+03:00.
 * View or change the number of days between a word change (default is 1)
-  with `/days <days>`. For example, `/days` shows the current settings,
+  with `/days [N]`. For example, `/days` shows the current settings,
   while `/days 5` sets the number of days to 5.
 * A cron job checks every minute and sends the "Word of the Day"
   at the scheduled time (adjusted to each chat’s timezone).
