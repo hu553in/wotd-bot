@@ -364,7 +364,7 @@ bot.onText(/\/time(?:\s+(.+))?/, async (msg, match) => {
 });
 
 /**
- * /days – Show or update the repeat period (number of days the same word is used).
+ * /days – Show or update the number of days between a word change.
  * Format: /days [N]
  */
 bot.onText(/\/days(?:\s+(\d+))?/, async (msg, match) => {
@@ -378,7 +378,7 @@ bot.onText(/\/days(?:\s+(\d+))?/, async (msg, match) => {
         .where({ chat_id: chatId })
         .first();
       bot
-        .sendMessage(chatId, `Период повтора: ${record.days} дней`)
+        .sendMessage(chatId, `Период смены слова: ${record.days} дней`)
         .catch(console.error);
     } catch (err) {
       console.error("Error retrieving days setting:", err);
@@ -401,7 +401,7 @@ bot.onText(/\/days(?:\s+(\d+))?/, async (msg, match) => {
   try {
     await knex("chats").where({ chat_id: chatId }).update({ days });
     bot
-      .sendMessage(chatId, `Период повтора установлен на ${days} дней.`)
+      .sendMessage(chatId, `Период смены слова установлен на ${days} дней.`)
       .catch(console.error);
   } catch (err) {
     console.error("Error updating days setting:", err);
@@ -418,7 +418,7 @@ async function sendDailyWordForChat(chat) {
   const chatId = chat.chat_id;
   const today = new Date().toISOString().split("T")[0];
 
-  // If a current word exists and its repeat period hasn't expired, re-send it.
+  // If a current word exists and its word change period hasn't expired, re-send it.
   if (chat.current_word_id && chat.word_start_date) {
     const startDate = new Date(chat.word_start_date);
     const currentDate = new Date(today);
