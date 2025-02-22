@@ -106,6 +106,7 @@ bot.onText(/\/start/, async (msg) => {
     `/remove <слово> – удалить слово\n` +
     `/words – показать список слов\n` +
     `/random – получить случайное слово (оно добавится в историю)\n` +
+    `/resend – повторно отправить текущее слово дня\n` +
     `/time [ЧЧ:ММ±смещение] – показать или установить время отправки\n` +
     `/days [N] – показать или установить период смены слова\n\n` +
     `Каждый день в установленное время я буду отправлять слово из вашего списка.`;
@@ -407,6 +408,41 @@ bot.onText(/\/days(?:\s+(\d+))?/, async (msg, match) => {
     console.error("Error updating days setting:", err);
     bot
       .sendMessage(chatId, "Ошибка при обновлении настроек периода.")
+      .catch(console.error);
+  }
+});
+
+/**
+ * /resend - Resend today's word without changing any state.
+ */
+bot.onText(/\/resend/, async (msg) => {
+  const chatId = String(msg.chat.id);
+  await registerChat(msg.chat);
+  try {
+    const chat = await knex("chats")
+      .select("current_word_id")
+      .where({ chat_id: chatId })
+      .first();
+    if (!chat?.current_word_id) {
+      bot.sendMessage(chatId, "Нет текущего слова дня.").catch(console.error);
+      return;
+    }
+    const wordRecord = await knex("words")
+      .select("word")
+      .where({ id: chat.current_word_id, chat_id: chatId });
+    if (!wordRecord) {
+      bot
+        .sendMessage(chatId, "Текущее слово не найдено в базе данных.")
+        .catch(console.error);
+      return;
+    }
+    bot
+      .sendMessage(chatId, `Слово дня: ${wordRecord.word}`)
+      .catch(console.error);
+  } catch (err) {
+    console.error("Error resending word:", err);
+    bot
+      .sendMessage(chatId, "Ошибка при повторной отправке слова.")
       .catch(console.error);
   }
 });
