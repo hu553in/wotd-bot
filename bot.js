@@ -429,7 +429,8 @@ bot.onText(/\/resend/, async (msg) => {
     }
     const wordRecord = await knex("words")
       .select("word")
-      .where({ id: chat.current_word_id, chat_id: chatId });
+      .where({ id: chat.current_word_id, chat_id: chatId })
+      .first();
     if (!wordRecord) {
       bot
         .sendMessage(chatId, "Текущее слово не найдено в базе данных.")
