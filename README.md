@@ -22,3 +22,7 @@ The bot also validates all input to ensure reliability.
   while `/days 5` sets the number of days to 5.
 * A cron job checks every minute and sends the "Word of the Day"
   at the scheduled time (adjusted to each chat's timezone).
+* Pause and resume word sending with `/pause` and `/resume`.
+  When paused, the bot remembers the current word and its period.
+  Upon resuming, if the word's period hasn't expired, the bot shows
+  the current word and remaining days until change.
