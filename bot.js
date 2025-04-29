@@ -64,7 +64,7 @@ async function runMigrations() {
     const [batch, log] = await knex.migrate.latest();
     logger.info(`Migrations run`, { batch, migrationLog: log });
   } catch (err) {
-    logger.error("Error running migrations", err);
+    logger.error("Error running migrations:", err);
     process.exit(1);
   }
 }
@@ -111,7 +111,7 @@ bot.onText(/\/start/, async (msg) => {
     await registerChat(msg.chat);
     await bot.sendMessage(chatId, welcomeMsg);
   } catch (err) {
-    logger.error("Error sending welcome message", err, { chatId });
+    logger.error("Error sending welcome message:", err, { chatId });
   }
 });
 
@@ -159,11 +159,11 @@ bot.onText(/\/add\s+(.+)/, async (msg, match) => {
     await knex("words").insert({ chat_id: chatId, word });
     await bot.sendMessage(chatId, `Слово "${word}" добавлено.`);
   } catch (err) {
-    logger.error("Error adding word", err, { chatId });
+    logger.error("Error adding word:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при добавлении слова.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -196,11 +196,11 @@ bot.onText(/\/remove\s+(.+)/, async (msg, match) => {
 
     await bot.sendMessage(chatId, `Слово "${word}" удалено.`);
   } catch (err) {
-    logger.error("Error removing word", err, { chatId });
+    logger.error("Error removing word:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при удалении слова.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -228,11 +228,11 @@ bot.onText(/\/words/, async (msg) => {
 
     await bot.sendMessage(chatId, `Ваши слова:\n${wordList}`);
   } catch (err) {
-    logger.error("Error retrieving words", err, { chatId });
+    logger.error("Error retrieving words:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при получении списка слов.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -257,10 +257,9 @@ bot.onText(/\/random/, async (msg) => {
       return;
     }
 
-    const usedIds = await knex("history")
-      .select("word_id")
-      .where({ chat_id: chatId })
-      .map((r) => r.word_id);
+    const usedIds = (
+      (await knex("history").select("word_id").where({ chat_id: chatId })) || []
+    ).map((r) => r.word_id);
 
     let available = words.filter((row) => !usedIds.includes(row.id));
     if (available.length === 0) {
@@ -277,11 +276,11 @@ bot.onText(/\/random/, async (msg) => {
 
     await bot.sendMessage(chatId, `Случайное слово: ${chosen.word}`);
   } catch (err) {
-    logger.error("Error processing random word", err, { chatId });
+    logger.error("Error processing random word:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при получении случайного слова.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -354,11 +353,11 @@ bot.onText(/\/time(?:\s+(.+))?/, async (msg, match) => {
       `Время отправки установлено на ${newTime} (UTC${tz})`
     );
   } catch (err) {
-    logger.error("Error updating time settings", err, { chatId });
+    logger.error("Error updating time settings:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при обновлении настроек времени.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -398,11 +397,11 @@ bot.onText(/\/days(?:\s+(\d+))?/, async (msg, match) => {
       `Период смены слова установлен на ${days} дней.`
     );
   } catch (err) {
-    logger.error("Error updating days setting", err, { chatId });
+    logger.error("Error updating days setting:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при обновлении настроек периода.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -437,11 +436,11 @@ bot.onText(/\/resend/, async (msg) => {
 
     await bot.sendMessage(chatId, `Слово дня: ${wordRecord.word}`);
   } catch (err) {
-    logger.error("Error resending word", err, { chatId });
+    logger.error("Error resending word:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при повторной отправке слова.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -461,11 +460,11 @@ bot.onText(/\/pause/, async (msg) => {
       "Бот приостановлен. Используйте /resume, чтобы возобновить отправку слов."
     );
   } catch (err) {
-    logger.error("Error pausing bot", err, { chatId });
+    logger.error("Error pausing bot:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при приостановке бота.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -522,11 +521,11 @@ bot.onText(/\/resume/, async (msg) => {
 
     await bot.sendMessage(chatId, message);
   } catch (err) {
-    logger.error("Error resuming bot", err, { chatId });
+    logger.error("Error resuming bot:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при возобновлении работы бота.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 });
@@ -583,10 +582,9 @@ async function sendDailyWordForChat(chat) {
       return;
     }
 
-    const usedIds = await knex("history")
-      .select("word_id")
-      .where({ chat_id: chatId })
-      .map((r) => r.word_id);
+    const usedIds = (
+      (await knex("history").select("word_id").where({ chat_id: chatId })) || []
+    ).map((r) => r.word_id);
 
     let available = words.filter((row) => !usedIds.includes(row.id));
     if (available.length === 0) {
@@ -609,11 +607,11 @@ async function sendDailyWordForChat(chat) {
 
     await bot.sendMessage(chatId, `Слово дня: ${chosen.word}`);
   } catch (err) {
-    logger.error("Error sending daily word", err, { chatId });
+    logger.error("Error sending daily word:", err, { chatId });
     try {
       await bot.sendMessage(chatId, "Ошибка при отправке слова дня.");
     } catch (sendErr) {
-      logger.error("Error sending error message", sendErr, { chatId });
+      logger.error("Error sending error message:", sendErr, { chatId });
     }
   }
 }
@@ -650,7 +648,7 @@ cron.schedule("* * * * *", async () => {
       })
     );
   } catch (err) {
-    logger.error("Error in scheduler", err);
+    logger.error("Error in scheduler:", err);
   }
 });
 
