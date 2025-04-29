@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 process="word-of-the-day-bot"
 
 \. ~/.nvm/nvm.sh
@@ -19,7 +21,7 @@ fi
 
 sleep 10
 
-pm2_jlist_output=$(pm2 jlist)
+pm2_jlist_output=$(pm2 jlist --silent)
 
 apt-get -y install jq
 
