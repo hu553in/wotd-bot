@@ -16,7 +16,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=deps --chown=node:node /app/node_modules ./node_modules
-COPY --chown=node:node package.json bot.js logger.js knexfile.js migrations ./
+COPY --chown=node:node package.json bot.js logger.js knexfile.js ./
+COPY --chown=node:node migrations ./migrations
 
 USER node
 CMD ["node", "bot.js"]
