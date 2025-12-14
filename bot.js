@@ -50,7 +50,7 @@ const validTimezones = new Set([
 // Read the token from the environment variable.
 const token = process.env.BOT_TOKEN;
 if (!token) {
-  logger.error("BOT_TOKEN environment variable is not set.");
+  console.error("Error: BOT_TOKEN is not defined!");
   process.exit(1);
 }
 
