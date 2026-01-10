@@ -1,5 +1,7 @@
 # Word of the day (wotd) bot
 
+[![CI](https://github.com/hu553in/wotd-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/hu553in/wotd-bot/actions/workflows/ci.yml)
+
 A simple Telegram bot that sends a daily word from your list at a scheduled time.
 The bot supports group and solo chats using only commands.
 It stores each chat's word list, daily-send settings, and history in an SQLite database.
