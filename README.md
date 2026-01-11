@@ -1,30 +1,36 @@
-# Word of the day (wotd) bot
+# Word of the day (WOTD) bot
 
 [![CI](https://github.com/hu553in/wotd-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/hu553in/wotd-bot/actions/workflows/ci.yml)
 
-A simple Telegram bot that sends a daily word from your list at a scheduled time.
-The bot supports group and solo chats using only commands.
-It stores each chat's word list, daily-send settings, and history in an SQLite database.
-The bot also validates all input to ensure reliability.
+A lightweight Telegram bot that sends a daily word from your custom list at a scheduled time.
+
+The bot works in both private and group chats, uses a command-only interface, and is designed to be predictable,
+reliable, and easy to operate. All state is stored locally in an SQLite database.
 
 ## Features
 
-* Add words to your personal list with `/add <word>`.
-* Remove a word by exact match with `/remove <word>`.
-* View your complete word list using `/words`.
-* Retrieve a random word (and add it to history) using `/random`.
-  Once all words have been used, the history resets automatically.
-* Resend today's word without changing any state using `/resend`.
-* View or update the scheduled daily-send time with `/time [HH:MM±offset]`.
-  For example, `/time` shows the current settings, while `/time 21:00+3`
-  sets the send time to 21:00 with timezone UTC+03:00.
-  Default time is 09:00 with timezone UTC+03:00.
-* View or change the number of days between a word change (default is 1)
-  with `/days [N]`. For example, `/days` shows the current settings,
-  while `/days 5` sets the number of days to 5.
-* A cron job checks every minute and sends the "Word of the Day"
-  at the scheduled time (adjusted to each chat's timezone).
-* Pause and resume word sending with `/pause` and `/resume`.
-  When paused, the bot remembers the current word and its period.
-  Upon resuming, if the word's period hasn't expired, the bot shows
-  the current word and remaining days until change.
+- Add a word to your list with `/add <word>`.
+- Remove a word by exact match using `/remove <word>`.
+- View the full word list with `/words`.
+- Get a random word (and record it in history) using `/random`.
+  - Once all words have been used, the history resets automatically.
+- Resend today’s word without changing state using `/resend`.
+- View or update the daily send time with `/time [HH:MM±offset]`.
+  - `/time` shows the current schedule.
+  - `/time 21:00+3` sets the time to 21:00 with timezone UTC+03:00.
+  - Default schedule is 09:00, UTC+03:00.
+- View or change how many days a word stays active using `/days [N]`.
+  - `/days` shows the current value.
+  - `/days 5` sets the period to 5 days.
+- A cron job runs every minute and delivers the “Word of the day”
+  at the configured time for each chat, adjusted to its timezone.
+- Pause and resume daily delivery with `/pause` and `/resume`.
+  - While paused, the bot remembers the current word and its remaining period.
+  - On resume, if the period hasn’t expired, the bot shows the current word
+    and how many days remain until the next change.
+
+## Notes
+
+- Each chat has its own isolated word list, schedule, and history.
+- Input is fully validated to prevent invalid states.
+- Designed for consistency and long-term unattended operation.
