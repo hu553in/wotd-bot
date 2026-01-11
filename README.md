@@ -14,7 +14,7 @@ reliable, and easy to operate. All state is stored locally in an SQLite database
 - View the full word list with `/words`.
 - Get a random word (and record it in history) using `/random`.
   - Once all words have been used, the history resets automatically.
-- Resend today’s word without changing state using `/resend`.
+- Resend today's word without changing state using `/resend`.
 - View or update the daily send time with `/time [HH:MM±offset]`.
   - `/time` shows the current schedule.
   - `/time 21:00+3` sets the time to 21:00 with timezone UTC+03:00.
@@ -22,11 +22,11 @@ reliable, and easy to operate. All state is stored locally in an SQLite database
 - View or change how many days a word stays active using `/days [N]`.
   - `/days` shows the current value.
   - `/days 5` sets the period to 5 days.
-- A cron job runs every minute and delivers the “Word of the day”
+- A cron job runs every minute and delivers the "Word of the day"
   at the configured time for each chat, adjusted to its timezone.
 - Pause and resume daily delivery with `/pause` and `/resume`.
   - While paused, the bot remembers the current word and its remaining period.
-  - On resume, if the period hasn’t expired, the bot shows the current word
+  - On resume, if the period hasn't expired, the bot shows the current word
     and how many days remain until the next change.
 
 ## Notes
